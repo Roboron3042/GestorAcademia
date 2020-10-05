@@ -1,0 +1,6 @@
+¿Cuántos teléfonos máximo? ¿2?
+¿Lista de modalidades o texto libre?
+¿Dar de baja a un alumno?
+¿No hay DNI?
+¿Condonar mes a todos los alumnos?
+¿Filtrar los que han pagado?
