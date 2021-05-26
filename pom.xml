@@ -13,7 +13,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>14</version>
+            <version>11</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
 	    <dependency>
