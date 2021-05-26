@@ -23,10 +23,10 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 	
-	private Integer TAMFUENTE = 14;
 	private Text estado;
 	private Stage principal;
 	private VBox vbox;
+	private Scene scene;
 	
 
     @Override
@@ -45,7 +45,6 @@ public class App extends Application {
 		
 		/* bottom */
 		estado = new Text("Iniciando la base de datos, por favor espere...");
-		estado.setFont(new Font(TAMFUENTE));
 		HBox hbox = new HBox();
 		hbox.setStyle("-fx-background-color: #CCCCCC;");
 		hbox.getChildren().add(estado);
@@ -57,13 +56,14 @@ public class App extends Application {
 	    vbox.setSpacing(10);
 		borderPane.setCenter(vbox);
 		
-		Scene scene = new Scene(borderPane);
+		scene = new Scene(borderPane);
 		
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
 		    	BD bd = new BD();
 		    	bd.iniciar();
+		    	//bd.finalize();
 				return null;
 			}
 		};
@@ -98,8 +98,8 @@ public class App extends Application {
 		
     	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				System.out.println("Botón pulsado");
-				
+				principal.setTitle("Ritmo Latino Gestión - Selección de mes");
+				principal.setScene(new SeleccionarMes(scene, principal).getScene());
 			}
 		});
     	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
@@ -134,7 +134,6 @@ public class App extends Application {
 		
 		estado.setText("Base de datos inicializada. Listo.");
 		estado.setFill(Color.GREEN);
-		
     }
 
 }

@@ -32,9 +32,9 @@ public class BD
 	{
 		try
 		{
-			//if (con!=null)  con.close();
+			if (con!=null)  con.close();
 			//Al estar usando derby embebido, cerramos la conexión de la siguiente formna:
-			DriverManager.getConnection("jdbc:derby:;shutdown=true");
+			//DriverManager.getConnection("jdbc:derby:;shutdown=true");
 		}
 		catch (SQLException ex)
 		{
