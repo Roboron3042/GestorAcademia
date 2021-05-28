@@ -34,17 +34,17 @@ public class Mes {
 		
 		BD bd = new BD();
 		List<Object[]> listaObj = bd.select("SELECT * FROM MES");
-		/*
-		if(listaMeses.isEmpty()) {
-			bd.insert("INSERT INTO MES VALUES('2020-5', 5, 2020)");
-		}
-		*/
 		for(Object[] o : listaObj) {
 			Mes m = new Mes(o[0].toString(), (Integer) o[1], (Integer) o[2]);
 			listaMeses.add(m);
 		}
+		bd.finalize();
 		
 		return listaMeses;
+	}
+	
+	public String getId() {
+		return id;
 	}
 
 }

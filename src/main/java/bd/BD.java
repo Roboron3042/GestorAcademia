@@ -177,9 +177,21 @@ public class BD
     			+ "mes int,"
     			+ "ano int)");
     	crear(	"mesAlumno", "CREATE TABLE mesAlumno "
-    			+ "(id varchar(128) PRIMARY KEY,"
+    			+ "(id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
     			+ "alumno int REFERENCES alumno(telefonoPrimario),"
     			+ "mes varchar(128) REFERENCES mes(id),"
     			+ "pagado boolean)");
+	}
+	public void poblar () {
+		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (987654321, 'Jaimito', 'Tadeo', 'Bachata', 60.05, FALSE)");
+		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (123456789, 'Pepito', 'Tadeo', 'Salsa', 30, FALSE)");
+		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (147258369, 'Jorgito', 'Tadeo', 'Bachata', 45, TRUE)");
+		insert("INSERT INTO MES VALUES ('2021-5', 5, 2021)");
+		insert("INSERT INTO MES VALUES ('2021-4', 4, 2021)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 987654321, '2021-4', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 987654321, '2021-5', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 123456789, '2021-4', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 123456789, '2021-5', FALSE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 147258369, '2021-4', FALSE)");
 	}
 }

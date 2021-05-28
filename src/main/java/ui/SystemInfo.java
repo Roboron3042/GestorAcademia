@@ -1,4 +1,4 @@
-package gestoracademia.gestoracademia;
+package ui;
 
 public class SystemInfo {
 
