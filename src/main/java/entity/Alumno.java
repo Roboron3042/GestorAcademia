@@ -83,7 +83,6 @@ public class Alumno {
 		BD bd = new BD();
 		bd.update("UPDATE " + TABLA + " SET baja = " + alumno.isBaja() + " WHERE telefonoPrimario = " + alumno.getTelefono());
 		bd.finalize();
-		
 	}
 	
 	public int getTelefono() {

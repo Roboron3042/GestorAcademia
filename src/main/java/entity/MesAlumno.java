@@ -35,9 +35,18 @@ public class MesAlumno {
 		return listaMesAlumno;
 	}
 	
+	public static int Impagos(Mes mes){
+		
+		BD bd = new BD();
+		List<Object[]> listaObj = bd.select("SELECT * FROM " + TABLA + " WHERE mes = '" + mes.getId() + "' AND pagado = false");
+		bd.finalize();
+		
+		return listaObj.size();
+	}
+	
 	public static void PagarMes(Mes mes, Alumno alumno) {
 		BD bd = new BD();
-		bd.update("UPDATE " + TABLA + " SET pagado = " + alumno.isPagado() + " WHERE alumno = " + alumno.getTelefono());
+		bd.update("UPDATE " + TABLA + " SET pagado = " + alumno.isPagado() + " WHERE alumno = " + alumno.getTelefono() + " AND mes = '" + mes.getId() + "'");
 		bd.finalize();
 	}
 	

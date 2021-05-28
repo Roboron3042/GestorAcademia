@@ -42,12 +42,14 @@ public class VistaMes {
 	private BarraEstado barra;
 	private HBox buttons_hbox;
 	private Mes mes;
+	private boolean fromSelMes;
     private List<Alumno> listaAlumnos = new ArrayList<Alumno>();
 
-	public  VistaMes(Scene previousScene, Stage stage, Mes mes) {
+	public  VistaMes(Scene previousScene, Stage stage, Mes mes, boolean fromSelMes) {
 		
 		this.mes = mes;
 		this.stage = stage;
+		this.fromSelMes = fromSelMes;
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Vista de alumnos de " + mes.toString());
 		
@@ -175,7 +177,11 @@ public class VistaMes {
     	
     	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				stage.setScene(previousScene);
+				if(fromSelMes) {
+					stage.setScene(new SeleccionarMes(previousScene, stage).getScene());
+				} else {
+					stage.setScene(previousScene);
+				}
 			}
 		});
     	

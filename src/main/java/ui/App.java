@@ -100,7 +100,7 @@ public class App extends Application {
 			public void handle(MouseEvent arg0) {
 				LocalDate hoy = LocalDate.now();
 				Mes mes = new Mes(hoy.getMonthValue(), hoy.getYear());
-				stage.setScene(new VistaMes(scene, stage, mes).getScene());
+				stage.setScene(new VistaMes(scene, stage, mes, false).getScene());
 			}
 		});
     	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
