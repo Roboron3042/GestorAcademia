@@ -17,7 +17,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,7 +28,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
 import ui_utils.UIElement;
@@ -57,12 +55,15 @@ public class VistaMes {
 		UIElement.Titulo("Vista del mes - " + mes.toString(), borderPane);
 			
 		/* center */
+		VBox center_vbox = new VBox();
+		center_vbox.setPadding(new Insets(0, 10, 0, 10));
 		tableView = crearTabla(mes);
-		borderPane.setCenter(tableView);
+		center_vbox.getChildren().add(tableView);
+		borderPane.setCenter(center_vbox);
 		
 		/* right */
 		VBox right_vbox = new VBox();
-		right_vbox.setPadding(new Insets(0, 0, 0, 10));
+		right_vbox.setPadding(new Insets(0, 10, 0, 10));
 		right_vbox.setSpacing(10);
 		Text texto_busqueda = new Text("Búsqueda de alumnos");
 		right_vbox.getChildren().add(texto_busqueda);
@@ -169,11 +170,15 @@ public class VistaMes {
 		
 		buttons_hbox = new HBox();
 		buttons_hbox.setSpacing(10);
+		buttons_hbox.setPadding(new Insets(0, 10, 0, 10));
     	bottom_vbox.getChildren().add(buttons_hbox);
     	
+    	HBox volver_hbox = new HBox();
+    	volver_hbox.setPadding(new Insets(0, 00, 0, 10));
     	Button volver = new Button("Volver");
     	volver.setPrefSize(200, 20);
-    	bottom_vbox.getChildren().add(volver);
+    	volver_hbox.getChildren().add(volver);
+    	bottom_vbox.getChildren().add(volver_hbox);
     	
     	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
@@ -201,18 +206,22 @@ public class VistaMes {
 
 	    TableColumn<Alumno, String> column1 = new TableColumn<>("Nombre");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+	    column1.setPrefWidth(150);
 
 	    TableColumn<Alumno, String> column2 = new TableColumn<>("Apellidos");
 	    column2.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+	    column2.setPrefWidth(200);
 	    
 	    TableColumn<Alumno, Integer> column3 = new TableColumn<>("Teléfono");
 	    column3.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+	    column3.setPrefWidth(100);
 	    
 	    TableColumn<Alumno, Double> column4 = new TableColumn<>("Cuantía");
 	    column4.setCellValueFactory(new PropertyValueFactory<>("cuantia"));
 	    
 	    TableColumn<Alumno, Double> column5 = new TableColumn<>("Modalidad");
 	    column5.setCellValueFactory(new PropertyValueFactory<>("modalidad"));
+	    column5.setPrefWidth(200);
 	    
 	    TableColumn<Alumno, String> column6 = new TableColumn<>("Pagado");
 	    column6.setCellValueFactory(new PropertyValueFactory<>("pagado"));
@@ -253,7 +262,7 @@ public class VistaMes {
 	
 	public void mostrarBotones() {
 		Button botones[] = new Button[] {
-    			new Button("Consultar/Modificar"),
+    			new Button("Consultar alumno"),
     			new Button("Pagar mes"),
     			new Button("Eliminar del mes"),
     			new Button("Generar recibo"),

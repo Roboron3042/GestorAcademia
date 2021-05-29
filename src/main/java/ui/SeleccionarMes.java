@@ -2,16 +2,13 @@ package ui;
 
 import java.util.List;
 
-import entity.Alumno;
 import entity.Mes;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,12 +28,13 @@ public class SeleccionarMes {
 	private Stage stage;
 	HBox vhbox;
 	private List<Mes> listaMeses;
-    TableView<Mes> tableView = new TableView<Mes>();
+    TableView<Mes> tableView;
 
 	public  SeleccionarMes(Scene previousScene, Stage stage) {
 
 		this.stage = stage;
 		this.previousScene = previousScene;
+	    tableView = new TableView<Mes>(); 
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Selección de mes");
 		
@@ -47,10 +45,11 @@ public class SeleccionarMes {
 	    VBox vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 	    vbox.setSpacing(10);
-		vbox.setPadding(new Insets(0, 0, 10, 0));
+		vbox.setPadding(new Insets(0, 10, 10, 10));
 		borderPane.setCenter(vbox);
 		
-		vbox.getChildren().add(crearTabla());
+		tableView = crearTabla();
+		vbox.getChildren().add(tableView);
 
 		vhbox = new HBox();
 		vhbox.setAlignment(Pos.CENTER);
@@ -68,9 +67,11 @@ public class SeleccionarMes {
 
 	    TableColumn<Mes, String> column1 = new TableColumn<>("Mes");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+	    column1.setMinWidth(150);
 
-	    TableColumn<Mes, Integer> column2 = new TableColumn<>("Impagos");
+	    TableColumn<Mes, Integer> column2 = new TableColumn<>("Pagos pendientes");
 	    column2.setCellValueFactory(new PropertyValueFactory<>("impagos"));
+	    column2.setMinWidth(150);
 
 	    tableView.getColumns().add(column1);
 	    tableView.getColumns().add(column2);
