@@ -16,7 +16,11 @@ public class Mes {
 	private static final String TABLA = "mes";
 	
 	public Mes(String id, Integer mes, Integer año) {
-		this.id = id;
+		if(mes < 10) {
+			this.id = año + "-0" + mes;
+		} else {
+			this.id = año + "-" + mes;
+		}
 		this.mes = mes;
 		this.año = año;
 		this.nombre = this.toString();
@@ -24,7 +28,11 @@ public class Mes {
 	}
 	
 	public Mes(Integer mes, Integer año) {
-		this.id = año + "-" + mes;
+		if(mes < 10) {
+			this.id = año + "-0" + mes;
+		} else {
+			this.id = año + "-" + mes;
+		}
 		this.mes = mes;
 		this.año = año;
 	}

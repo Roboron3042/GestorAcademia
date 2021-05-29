@@ -98,7 +98,7 @@ public class SeleccionarMes {
 	
 	private void mostrarBotones() {
     	Button botones[] = new Button[] {
-    			new Button("Atrás"),
+    			new Button("Volver"),
     			new Button("Seleccionar")
     	};
     	for(Button b : botones) {

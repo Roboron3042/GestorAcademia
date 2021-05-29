@@ -66,8 +66,8 @@ public class App extends Application {
 		};
 		new Thread(task).start();
 		task.setOnSucceeded(event -> {
-			mostrarBotones(); 
 	    	barra.setEstado("Base de datos inicializada. Listo.");
+			mostrarBotones(); 
 		});
 		
 		stage.setScene(scene);
