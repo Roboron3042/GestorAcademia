@@ -105,7 +105,7 @@ public class App extends Application {
 		});
     	botones[2].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				System.out.println("Botón pulsado");
+				stage.setScene(new SeleccionarAlumno(scene, stage).getScene());
 				
 			}
 		});

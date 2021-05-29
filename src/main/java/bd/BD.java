@@ -125,6 +125,24 @@ public class BD
 			throw new BDException("Error en el INSERT: " + ins+ ". " + ex.getMessage());
 		}
 	}
+	
+	public int insertAuto(String ins)
+	{
+		try
+		{
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(ins, Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			int res = rs.getInt(1);
+			stmt.close();
+			return res;
+		}
+		catch (SQLException ex)
+		{
+			throw new BDException("Error en el INSERT: " + ins+ ". " + ex.getMessage());
+		}
+	}
 
 	public void delete(String del)
 	{
@@ -165,7 +183,8 @@ public class BD
 	public void iniciar () {
 
     	crear(	"alumno", "CREATE TABLE alumno "
-    			+ "(telefonoPrimario int PRIMARY KEY, "
+    			+ "(id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+    			+ "telefonoPrimario int, "
     			+ "telefonoSecundario int,"
     			+ "nombre varchar(128),"
     			+ "apellidos varchar(128),"
@@ -178,20 +197,23 @@ public class BD
     			+ "ano int)");
     	crear(	"mesAlumno", "CREATE TABLE mesAlumno "
     			+ "(id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-    			+ "alumno int REFERENCES alumno(telefonoPrimario),"
+    			+ "alumno int REFERENCES alumno(id),"
     			+ "mes varchar(128) REFERENCES mes(id),"
     			+ "pagado boolean)");
 	}
 	public void poblar () {
-		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (987654321, 'Jaimito', 'Tadeo', 'Bachata', 60.05, FALSE)");
-		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (123456789, 'Pepito', 'Tadeo', 'Salsa', 30, FALSE)");
-		insert("INSERT INTO ALUMNO (telefonoPrimario, nombre, apellidos, modalidad, cuantia, baja) VALUES (147258369, 'Jorgito', 'Tadeo', 'Bachata', 45, TRUE)");
+		insertAuto("INSERT INTO ALUMNO VALUES (DEFAULT, 987654321, 0, 'Jaimito', 'Tadeo', 'Bachata', 60.05, FALSE)");
+		insertAuto("INSERT INTO ALUMNO VALUES (DEFAULT, 123456789, 0, 'Pepito', 'Tadeo', 'Salsa', 30, FALSE)");
+		insertAuto("INSERT INTO ALUMNO VALUES (DEFAULT, 147258369, 0, 'Jorgito', 'Tadeo', 'Bachata', 45, TRUE)");
+		System.out.println("Alumnos insertados");
 		insert("INSERT INTO MES VALUES ('2021-05', 5, 2021)");
 		insert("INSERT INTO MES VALUES ('2021-04', 4, 2021)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 987654321, '2021-04', TRUE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 987654321, '2021-05', TRUE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 123456789, '2021-04', TRUE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 123456789, '2021-05', FALSE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 147258369, '2021-04', FALSE)");
+		System.out.println("Meses insertados");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 1, '2021-04', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 1, '2021-05', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 2, '2021-04', TRUE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 2, '2021-05', FALSE)");
+		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 3, '2021-04', FALSE)");
+		System.out.println("MesAlumnos insertados");
 	}
 }

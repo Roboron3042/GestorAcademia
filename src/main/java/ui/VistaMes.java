@@ -40,14 +40,12 @@ public class VistaMes {
 	private BarraEstado barra;
 	private HBox buttons_hbox;
 	private Mes mes;
-	private boolean fromSelMes;
     private List<Alumno> listaAlumnos = new ArrayList<Alumno>();
 
 	public  VistaMes(Scene previousScene, Stage stage, Mes mes, boolean fromSelMes) {
 		
 		this.mes = mes;
 		this.stage = stage;
-		this.fromSelMes = fromSelMes;
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Vista de alumnos de " + mes.toString());
 		
@@ -63,7 +61,7 @@ public class VistaMes {
 		
 		/* right */
 		VBox right_vbox = new VBox();
-		right_vbox.setPadding(new Insets(0, 10, 0, 10));
+		right_vbox.setPadding(new Insets(0, 20, 0, 10));
 		right_vbox.setSpacing(10);
 		Text texto_busqueda = new Text("Búsqueda de alumnos");
 		right_vbox.getChildren().add(texto_busqueda);
@@ -246,7 +244,7 @@ public class VistaMes {
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				listaAlumnos = Alumno.ListaAlumnosMes(mes);
+				listaAlumnos = Alumno.listaAlumnosMes(mes);
 				return null;
 			}
 		};
@@ -279,7 +277,7 @@ public class VistaMes {
 			public void handle(MouseEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					stage.setScene(new VistaAlumno(currentScene, stage, seleccionado).getScene());
+					stage.setScene(new VistaAlumno(currentScene, stage, seleccionado, false).getScene());
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para consultar");
 				}
@@ -289,9 +287,10 @@ public class VistaMes {
 			public void handle(MouseEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
+					MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
+					ma.setPagado(!seleccionado.isPagado());
 					seleccionado.setPagado(!seleccionado.isPagado());
 					tableView.refresh();
-					MesAlumno.PagarMes(mes, seleccionado);
 					barra.setEstado("Se ha pagado el mes " + mes.toString() + " del alumno " + seleccionado.toString());
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para pagar");
@@ -304,10 +303,11 @@ public class VistaMes {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					listaAlumnos.remove(seleccionado);
 					tableView.getItems().remove(seleccionado);
-					MesAlumno.EliminarMesAlumno(mes, seleccionado);
+					MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
+					ma.eliminar();
 					barra.setEstado("Se ha eliminado el mes " + mes.toString() + " del alumno " + seleccionado.toString());
 				} else {
-					barra.setEstado("No se ha seleccionado ningún alumno para borrar");
+					barra.setEstado("No se ha seleccionado ningún alumno para borrar del mes");
 				}
 				
 			}
@@ -347,12 +347,12 @@ public class VistaMes {
 					Optional<ButtonType> result = alert.showAndWait();
 					if (result.get() != buttonTypeCancel){
 					    seleccionado.setBaja(true);
-					    Alumno.DarBaja(seleccionado);
 						barra.setEstado("El alumno " + seleccionado.toString() + " se ha dado de baja");
 						if (result.get() == buttonTypeOne) {
 							listaAlumnos.remove(seleccionado);
 							tableView.getItems().remove(seleccionado);
-							MesAlumno.EliminarMesAlumno(mes, seleccionado);
+							MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
+							ma.eliminar();
 						}
 					} 
 				} else {
@@ -373,7 +373,8 @@ public class VistaMes {
 				    for(Alumno a : listaAlumnos) {
 				    	if(!a.isPagado()) {
 				    		a.setPagado(true);
-							MesAlumno.PagarMes(mes, a);
+							MesAlumno ma = MesAlumno.listaMesAlumno(a, mes).get(0);
+							ma.setPagado(true);
 				    	}
 				    }
 					tableView.refresh();
