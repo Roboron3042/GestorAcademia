@@ -20,7 +20,7 @@ public class Alumno {
 	
 	public Alumno(int telefono, int telefono_sec, String nombre, String apellidos, String modalidad, double cuantia, boolean baja) {
 		BD bd = new BD();
-		this.id = bd.insertAuto("INSERT INTO " + TABLA + " VALUES (DEFAULT," + telefono + "," + telefono_sec + "'" + nombre + "','" + apellidos + "','" + modalidad + "'," + cuantia + "," + baja + ")");
+		this.id = bd.insertAuto("INSERT INTO " + TABLA + " VALUES (DEFAULT," + telefono + "," + telefono_sec + ",'" + nombre + "','" + apellidos + "','" + modalidad + "'," + cuantia + "," + baja + ")");
 		bd.finalize();
 		this.telefono = telefono;
 		this.telefono_sec = telefono_sec;

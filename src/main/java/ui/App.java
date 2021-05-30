@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
+import ui_utils.Origen;
 import ui_utils.UIElement;
 
 
@@ -96,7 +97,7 @@ public class App extends Application {
 		});
     	botones[3].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				System.out.println("Botón pulsado");
+				new VistaAlumno(scene, stage, null, Origen.CREACION);
 				
 			}
 		});

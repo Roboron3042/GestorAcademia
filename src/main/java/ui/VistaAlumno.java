@@ -63,10 +63,14 @@ public class VistaAlumno {
 		this.alumno = alumno;
 		initializeData();
 		BorderPane borderPane = new BorderPane();
-		stage.setTitle("Ritmo Latino Gestión - Consultar o modificar alumno " + alumno.toString());
-		
-		/* top */
-		UIElement.Titulo("Detalles del alumno " + alumno.toString(), borderPane);
+		if(origen == Origen.CREACION) {
+			stage.setTitle("Ritmo Latino Gestión - Crear nuevo alumno");
+			UIElement.Titulo("Crear nuevo alumno", borderPane);
+		} else {
+			stage.setTitle("Ritmo Latino Gestión - Consultar o modificar alumno " + alumno.toString());
+			/* top */
+			UIElement.Titulo("Detalles del alumno " + alumno.toString(), borderPane);
+		}
 		
 		/* left */
 		VBox izquierda = new VBox();
@@ -76,32 +80,26 @@ public class VistaAlumno {
 		
 		izquierda.getChildren().add(new Text("Nombre:"));
 		nombre = new TextField();
-		nombre.setText(alumno.getNombre());
 		izquierda.getChildren().add(nombre);
 		
 		izquierda.getChildren().add(new Text("Apellidos:"));
 		apellidos = new TextField();
-		apellidos.setText(alumno.getApellidos());
 		izquierda.getChildren().add(apellidos);
 		
 		izquierda.getChildren().add(new Text("Teléfono 1:"));
 		telefono = new TextField();
-		telefono.setText(Integer.toString(alumno.getTelefono()));
 		izquierda.getChildren().add(telefono);
 		
 		izquierda.getChildren().add(new Text("Teléfono 2:"));
 		telefono_sec = new TextField();
-		telefono_sec.setText(Integer.toString(alumno.getTelefono_sec()));
 		izquierda.getChildren().add(telefono_sec);
 		
 		izquierda.getChildren().add(new Text("Modalidad de baile:"));
 		modalidad = new TextField();
-		modalidad.setText(alumno.getModalidad());
 		izquierda.getChildren().add(modalidad);
 		
 		izquierda.getChildren().add(new Text("Cuantía:"));
 		cuantia = new TextField();
-		cuantia.setText(Double.toString(alumno.getCuantia()));
 		izquierda.getChildren().add(cuantia);
 	
 		izquierda.getChildren().add(new Text("Estado de la baja:"));
@@ -111,13 +109,14 @@ public class VistaAlumno {
 		rbAlta.setToggleGroup(tgBaja);
 		rbBaja = new RadioButton("Baja");
 		rbBaja.setToggleGroup(tgBaja);
-		if(alumno.isBaja()) {
-			rbBaja.setSelected(true);
+		izquierda.getChildren().add(rbAlta);
+		izquierda.getChildren().add(rbBaja);
+		
+		if(origen != Origen.CREACION) {
+			initializeForm();
 		} else {
 			rbAlta.setSelected(true);
 		}
-		izquierda.getChildren().add(rbAlta);
-		izquierda.getChildren().add(rbBaja);
 
 
 		borderPane.setLeft(izquierda);
@@ -161,7 +160,9 @@ public class VistaAlumno {
 
 		centro.getChildren().add(cmbs);
 
-		borderPane.setCenter(centro);
+		if(origen != Origen.CREACION) {
+			borderPane.setCenter(centro);
+		}
 		
 		/* bottom */
 		VBox bottom_vbox = new VBox();
@@ -227,25 +228,38 @@ public class VistaAlumno {
 					barra.setEstado("El teléfono 1 no es válido (ponlo a 0 para omitir)");
 				} else if(!(telefono_sec.getText().length() == 9 && telefono_sec.getText().matches("\\d+")) && !telefono_sec.getText().equals("0")){
 					barra.setEstado("El teléfono 2 no es válido (ponlo a 0 para omitir)");
-				} else if(!cuantia.getText().matches("\\d+.?\\d+") || cuantia.getText().isEmpty()){
+				} else if(!cuantia.getText().matches("\\d+.?[\\d+]?") || cuantia.getText().isEmpty()){
 					barra.setEstado("La cuantía debe ser numérica");
 				} else {
 					boolean bajaValue = false;
 					if(tgBaja.getSelectedToggle().equals(rbBaja)) {
 						bajaValue = true;
 					}
-					alumno.setNombre(nombre.getText());
-					alumno.setApellidos(apellidos.getText());
-					alumno.setTelefono(Integer.parseInt(telefono.getText()));
-					alumno.setTelefono_sec(Integer.parseInt(telefono_sec.getText()));
-					alumno.setModalidad(modalidad.getText());
-					alumno.setCuantia(Double.parseDouble(cuantia.getText()));
-					alumno.setBaja(bajaValue);
-					barra.setEstado("Alumno guardado correctamente");
+					if(origen == Origen.CREACION) {
+						Alumno nuevo = new Alumno(	Integer.parseInt(telefono.getText()),
+													Integer.parseInt(telefono_sec.getText()),	
+													nombre.getText(), 
+													apellidos.getText(),
+													modalidad.getText(),
+													Double.parseDouble(cuantia.getText()),
+													bajaValue);
+						new VistaAlumno(previousScene, stage, nuevo, Origen.SELECCION);
+					} else {
+						alumno.setNombre(nombre.getText());
+						alumno.setApellidos(apellidos.getText());
+						alumno.setTelefono(Integer.parseInt(telefono.getText()));
+						alumno.setTelefono_sec(Integer.parseInt(telefono_sec.getText()));
+						alumno.setModalidad(modalidad.getText());
+						alumno.setCuantia(Double.parseDouble(cuantia.getText()));
+						alumno.setBaja(bajaValue);
+						barra.setEstado("Alumno guardado correctamente");
+					}
 				}
 			}
 		});
-    	buttons_bot.getChildren().add(botones[1]);
+    	if(origen != Origen.CREACION) {
+    		buttons_bot.getChildren().add(botones[1]);
+    	}
     	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -332,14 +346,18 @@ public class VistaAlumno {
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				listaMeses = MesAlumno.listaMesAlumno(alumno);
+				if(origen != Origen.CREACION) {
+					listaMeses = MesAlumno.listaMesAlumno(alumno);
+				}
 				return null;
 			}
 		};
 		new Thread(task).start();
 		task.setOnSucceeded(event -> {
-			barra.setEstado("Lista de meses cargada con éxito.");
-		    rellenarTabla();
+			if(origen != Origen.CREACION) {
+				barra.setEstado("Lista de meses cargada con éxito.");
+			    rellenarTabla();
+			}
 		    addBotones();
 		});
 	}
@@ -367,5 +385,19 @@ public class VistaAlumno {
 	    tablaMeses.getColumns().add(column2);
 	    
 	    return tablaMeses;
+	}
+	
+	private void initializeForm() {
+		nombre.setText(alumno.getNombre());
+		apellidos.setText(alumno.getApellidos());
+		telefono.setText(Integer.toString(alumno.getTelefono()));
+		telefono_sec.setText(Integer.toString(alumno.getTelefono_sec()));
+		modalidad.setText(alumno.getModalidad());
+		cuantia.setText(Double.toString(alumno.getCuantia()));
+		if(alumno.isBaja()) {
+			rbBaja.setSelected(true);
+		} else {
+			rbAlta.setSelected(true);
+		}
 	}
 }
