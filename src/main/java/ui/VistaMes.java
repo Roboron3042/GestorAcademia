@@ -11,7 +11,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -37,22 +36,22 @@ public class VistaMes {
 	
 	private TableView<Alumno> tableView;
 	private Stage stage;
-	private Scene currentScene;
+	private BorderPane borderPane;
 	private BarraEstado barra;
 	private HBox buttons_hbox;
 	private Mes mes;
     private List<Alumno> listaAlumnos = new ArrayList<Alumno>();
 
-    public  VistaMes(Scene previousScene, Stage stage, Mes mes) {
-    	this(previousScene, stage, mes, Origen.ESTANDAR);
+    public  VistaMes(BorderPane previousPane, Stage stage, Mes mes) {
+    	this(previousPane, stage, mes, Origen.ESTANDAR);
     }
     
-	public  VistaMes(Scene previousScene, Stage stage, Mes mes, Origen origen) {
+	public  VistaMes(BorderPane previousPane, Stage stage, Mes mes, Origen origen) {
 		
 		this.mes = mes;
 		this.stage = stage;
 		initializeData();
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Vista de alumnos de " + mes.toString());
 		
 		/* top */
@@ -187,9 +186,9 @@ public class VistaMes {
     	volver.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				if(origen == Origen.SELECCION) {
-					new SeleccionarMes(previousScene, stage);
+					new SeleccionarMes(previousPane, stage);
 				} else {
-					stage.setScene(previousScene);
+					stage.getScene().setRoot(previousPane);
 				}
 			}
 		});
@@ -198,8 +197,7 @@ public class VistaMes {
     	bottom_vbox.getChildren().add(barra.getHbox());
 		borderPane.setBottom(bottom_vbox);
 
-		currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 	
 	public TableView<Alumno> crearTabla(Mes mes) {
@@ -243,6 +241,9 @@ public class VistaMes {
 	    tableView.getColumns().add(column4);
 	    tableView.getColumns().add(column5);
 	    tableView.getColumns().add(column6);
+	    
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tableView.setPrefHeight(App.ALTO*2);
 		
 		return tableView;
 	}
@@ -266,7 +267,7 @@ public class VistaMes {
 			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					new VistaAlumno(currentScene, stage, seleccionado);
+					new VistaAlumno(borderPane, stage, seleccionado);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para consultar");
 				}
@@ -306,7 +307,7 @@ public class VistaMes {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
-						new VistaRecibo(currentScene, stage, mes, seleccionado);
+						new VistaRecibo(borderPane, stage, mes, seleccionado);
 					} else {
 						barra.setEstado("No se puede generar recibo de un alumno que no ha pagado el mes");
 					}

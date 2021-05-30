@@ -12,7 +12,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -37,7 +36,7 @@ import ui_utils.UIElement;
 public class VistaAlumno {
 
 	private BarraEstado barra;
-	private Scene currentScene, previousScene;
+	private BorderPane borderPane, previousPane;
 	private Stage stage;
 	private Alumno alumno;
 	private TableView<MesAlumno> tablaMeses;
@@ -51,18 +50,18 @@ public class VistaAlumno {
 	private RadioButton rbAlta, rbBaja;
 	private ToggleGroup tgBaja;
 	
-	public  VistaAlumno(Scene previousScene, Stage stage, Alumno alumno) {
-		this(previousScene, stage, alumno, Origen.ESTANDAR);
+	public  VistaAlumno(BorderPane previousPane, Stage stage, Alumno alumno) {
+		this(previousPane, stage, alumno, Origen.ESTANDAR);
 	}
 
-	public  VistaAlumno(Scene previousScene, Stage stage, Alumno alumno, Origen origen) {
+	public  VistaAlumno(BorderPane previousPane, Stage stage, Alumno alumno, Origen origen) {
 		
 		this.stage = stage;
-		this.previousScene = previousScene;
+		this.previousPane = previousPane;
 		this.origen = origen;
 		this.alumno = alumno;
 		initializeData();
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		if(origen == Origen.CREACION) {
 			stage.setTitle("Ritmo Latino Gestión - Crear nuevo alumno");
 			UIElement.Titulo("Crear nuevo alumno", borderPane);
@@ -183,9 +182,9 @@ public class VistaAlumno {
     	volver.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				if(origen == Origen.SELECCION) {
-					new SeleccionarAlumno(previousScene, stage);
+					new SeleccionarAlumno(previousPane, stage);
 				} else {
-					stage.setScene(previousScene);
+					stage.getScene().setRoot(previousPane);
 				}
 			}
 		});
@@ -193,8 +192,7 @@ public class VistaAlumno {
     	bottom_vbox.getChildren().add(barra.getHbox());
 		borderPane.setBottom(bottom_vbox);
 		
-		currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 	
 	private void rellenarTabla() {
@@ -224,14 +222,20 @@ public class VistaAlumno {
 					barra.setEstado("El nombre del alumno no puede estar en blanco");
 				} else if(apellidos.getText().isEmpty()) {
 					barra.setEstado("Los apellidos del alumno no pueden estar en blanco");
-				} else if(!(telefono.getText().length() == 9 && telefono.getText().matches("\\d+")) && !telefono.getText().equals("0")){
-					barra.setEstado("El teléfono 1 no es válido (ponlo a 0 para omitir)");
-				} else if(!(telefono_sec.getText().length() == 9 && telefono_sec.getText().matches("\\d+")) && !telefono_sec.getText().equals("0")){
-					barra.setEstado("El teléfono 2 no es válido (ponlo a 0 para omitir)");
+				} else if(!(telefono.getText().length() == 9 && telefono.getText().matches("\\d+")) && !telefono.getText().equals("0") && !telefono.getText().isEmpty()){
+					barra.setEstado("El teléfono 1 no es válido");
+				} else if(!(telefono_sec.getText().length() == 9 && telefono_sec.getText().matches("\\d+")) && !telefono_sec.getText().equals("0") && !telefono_sec.getText().isEmpty()){
+					barra.setEstado("El teléfono 2 no es válido");
 				} else if(!cuantia.getText().matches("\\d+.?[\\d+]?") || cuantia.getText().isEmpty()){
 					barra.setEstado("La cuantía debe ser numérica");
 				} else {
 					boolean bajaValue = false;
+					if(telefono.getText().isEmpty()) {
+						telefono.setText("0");
+					}
+					if(telefono_sec.getText().isEmpty()) {
+						telefono_sec.setText("0");
+					}
 					if(tgBaja.getSelectedToggle().equals(rbBaja)) {
 						bajaValue = true;
 					}
@@ -243,7 +247,7 @@ public class VistaAlumno {
 													modalidad.getText(),
 													Double.parseDouble(cuantia.getText()),
 													bajaValue);
-						new VistaAlumno(previousScene, stage, nuevo, Origen.SELECCION);
+						new VistaAlumno(previousPane, stage, nuevo, Origen.SELECCION);
 					} else {
 						alumno.setNombre(nombre.getText());
 						alumno.setApellidos(apellidos.getText());
@@ -274,9 +278,9 @@ public class VistaAlumno {
 				    }
 					alumno.eliminar();
 					if(origen == Origen.SELECCION) {
-						new SeleccionarAlumno(previousScene, stage);
+						new SeleccionarAlumno(previousPane, stage);
 					} else {
-						stage.setScene(previousScene);
+						stage.getScene().setRoot(previousPane);
 					}
 				}
 			}
@@ -315,7 +319,7 @@ public class VistaAlumno {
 				if(tablaMeses.getSelectionModel().getSelectedItems().size() > 0) {
 					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
-						new VistaRecibo(currentScene, stage, new Mes(seleccionado.getMes()), alumno);
+						new VistaRecibo(borderPane, stage, new Mes(seleccionado.getMes()), alumno);
 					} else {
 						barra.setEstado("No se puede generar recibo de un alumno que no ha pagado el mes");
 					}
@@ -383,6 +387,10 @@ public class VistaAlumno {
 
 	    tablaMeses.getColumns().add(column1);
 	    tablaMeses.getColumns().add(column2);
+	    
+	    //tablaMeses.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tablaMeses.setPrefHeight(App.ALTO*2);
+	    //tablaMeses.setMaxWidth(App.ANCHO/3);
 	    
 	    return tablaMeses;
 	}

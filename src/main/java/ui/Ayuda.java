@@ -2,18 +2,18 @@ package ui;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import ui_utils.UIElement;
 
 public class Ayuda {
 
-	public  Ayuda(Scene previousScene, Stage stage) {
+	public  Ayuda(BorderPane previousPane, Stage stage) {
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Ayuda");
 		
@@ -23,7 +23,9 @@ public class Ayuda {
 		/* center */
 		VBox vbox = new VBox();
 		vbox.setSpacing(10);
-		vbox.setPadding(new Insets(0, 0, 10, 10));
+		vbox.setPadding(new Insets(0, 100, 10, 10));
+		
+		TextFlow tf = new TextFlow();
 
 		Text text[] = {
 				new Text("Funcionalidad general"),
@@ -40,14 +42,14 @@ public class Ayuda {
 				new Text("La pantalla de registrar nuevo alumno es similar a la de consultar un alumno existente, con la diferencia de que no puedes añadir meses al alumno hasta que el alumno haya sido guardado. Una vez hayas pulsado en guardar, el alumno se creará y pasarás automáticamente a la vista de detalles del nuevo alumno, donde puedes añadir los meses que sean necesarios."),
 		};
 		for(int i = 0; i < text.length; i++) {
+			text[i].setText(text[i].getText().concat("\n\n"));
 			if(i % 2 == 0) {
 				text[i].setStyle("-fx-font-weight: bold");
 			} 
-			text[i].setWrappingWidth(stage.getWidth() - 40);
-			vbox.getChildren().add(text[i]);
+			tf.getChildren().add(text[i]);
 		}
 		
-
+		vbox.getChildren().add(tf);
 		borderPane.setCenter(vbox);
 
 		/* bottom */
@@ -58,13 +60,12 @@ public class Ayuda {
 		volver.setPrefSize(300, 20);
     	volver.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				stage.setScene(previousScene);
+				stage.getScene().setRoot(previousPane);
 			}
 		});
     	buttons_hbox.getChildren().add(volver);
 		borderPane.setBottom(buttons_hbox);
 		
-		Scene currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 }

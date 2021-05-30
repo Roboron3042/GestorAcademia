@@ -28,7 +28,10 @@ import java.net.*;
  */
 public class App extends Application {
 	
+	final static int ANCHO = 1200;
+	final static int ALTO = 800;
 	private BarraEstado barra;
+	private BorderPane borderPane;
 	private Stage stage;
 	private VBox vbox;
 	private Scene scene;
@@ -39,7 +42,7 @@ public class App extends Application {
 
 		this.stage = stage;
 		justOne();
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		initializeData();
 		stage.setTitle("Ritmo Latino Gestión");
 		
@@ -59,7 +62,9 @@ public class App extends Application {
 		
 		scene = new Scene(borderPane);
 
-		stage.setMaximized(true);
+		stage.setMinWidth(ANCHO);
+		stage.setMinHeight(ALTO);
+		//stage.setMaximized(true);
 		stage.setScene(scene);
 		stage.show();
     }
@@ -86,32 +91,32 @@ public class App extends Application {
     	}
     	botones[0].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new VistaMes(scene, stage, mes);
+				new VistaMes(borderPane, stage, mes);
 			}
     	});
     	botones[1].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new SeleccionarMes(scene, stage);
+				new SeleccionarMes(borderPane, stage);
 			}
 		});
     	botones[2].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new SeleccionarAlumno(scene, stage);
+				new SeleccionarAlumno(borderPane, stage);
 			}
 		});
     	botones[3].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new VistaAlumno(scene, stage, null, Origen.CREACION);
+				new VistaAlumno(borderPane, stage, null, Origen.CREACION);
 			}
 		});
     	botones[4].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new Ayuda(scene, stage);
+				new Ayuda(borderPane, stage);
 			}
 		});
     	botones[5].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				new AcercaDe(scene, stage);
+				new AcercaDe(borderPane, stage);
 			}
 		});
     	botones[6].setOnAction(new EventHandler<ActionEvent>() {

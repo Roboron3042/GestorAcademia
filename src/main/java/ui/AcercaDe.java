@@ -3,17 +3,20 @@ package ui;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import ui_utils.UIElement;
 
 public class AcercaDe {
-	public  AcercaDe(Scene previousScene, Stage stage) {
+	
+	public  AcercaDe(BorderPane previousPane, Stage stage) {
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Acerca De");
 		
@@ -24,9 +27,11 @@ public class AcercaDe {
 		VBox vbox = new VBox();
 		vbox.setSpacing(10);
 		vbox.setPadding(new Insets(0, 0, 10, 10));
+		
+		TextFlow tf = new TextFlow();
 
 		Text text[] = {
-				new Text("Ritmo Latino Gestión Versión 1.0 (c) Copyright Roberto Michán Sánchez"),
+				new Text("Ritmo Latino Gestión Versión 1.0 (c) Copyright Roberto Michán Sánchez\n\n"),
 				new Text("    This program is free software: you can redistribute it and/or modify\n"
 						+ "    it under the terms of the GNU General Public License as published by\n"
 						+ "    the Free Software Foundation, either version 3 of the License, or\n"
@@ -44,11 +49,12 @@ public class AcercaDe {
 			if(i % 2 == 0) {
 				text[i].setStyle("-fx-font-weight: bold");
 			} 
-			text[i].setWrappingWidth(stage.getWidth() - 40);
-			vbox.getChildren().add(text[i]);
+			tf.getChildren().add(text[i]);
 		}
 		
-
+		vbox.getChildren().add(tf);
+		vbox.setAlignment(Pos.CENTER);
+		tf.setTextAlignment(TextAlignment.CENTER);
 		borderPane.setCenter(vbox);
 
 		/* bottom */
@@ -59,13 +65,12 @@ public class AcercaDe {
 		volver.setPrefSize(300, 20);
     	volver.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				stage.setScene(previousScene);
+				stage.getScene().setRoot(previousPane);
 			}
 		});
     	buttons_hbox.getChildren().add(volver);
 		borderPane.setBottom(buttons_hbox);
 
-		Scene currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 }

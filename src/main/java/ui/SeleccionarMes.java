@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -24,19 +23,18 @@ import ui_utils.UIElement;
 public class SeleccionarMes {
 	
 	private BarraEstado barra;
-	private Scene previousScene;
-	private Scene currentScene;
+	private BorderPane previousPane, borderPane;
 	private Stage stage;
 	HBox vhbox;
 	private List<Mes> listaMeses;
     TableView<Mes> tableView;
 
-	public  SeleccionarMes(Scene previousScene, Stage stage) {
+	public  SeleccionarMes(BorderPane previousPane, Stage stage) {
 
 		this.stage = stage;
-		this.previousScene = previousScene;
+		this.previousPane = previousPane;
 		initializeData();
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Selección de mes");
 		
 		/* top */
@@ -60,8 +58,7 @@ public class SeleccionarMes {
 		barra = new BarraEstado("Selecciona un mes y pulsa continuar");
 		borderPane.setBottom(barra.getHbox());
 		
-		currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 	
 	public TableView<Mes> crearTabla() {
@@ -77,6 +74,10 @@ public class SeleccionarMes {
 
 	    tableView.getColumns().add(column1);
 	    tableView.getColumns().add(column2);
+	    
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tableView.setPrefHeight(App.ALTO*2);
+	    tableView.setMaxWidth(App.ANCHO/2);
 		
 		return tableView;
 	}
@@ -92,14 +93,14 @@ public class SeleccionarMes {
     	}
     	botones[0].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				stage.setScene(previousScene);
+				stage.getScene().setRoot(previousPane);
 			}
 		});
     	botones[1].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Mes seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					new VistaMes(previousScene, stage, seleccionado, Origen.SELECCION);
+					new VistaMes(previousPane, stage, seleccionado, Origen.SELECCION);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún mes para consultar");
 				}

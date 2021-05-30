@@ -8,7 +8,6 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -24,19 +23,19 @@ import ui_utils.UIElement;
 
 public class SeleccionarAlumno {
 	private BarraEstado barra;
-	private Scene previousScene;
-	private Scene currentScene;
+	private BorderPane previousPane;
+	private BorderPane borderPane;
 	private Stage stage;
 	HBox vhbox;
 	private List<Alumno> listaAlumnos;
     TableView<Alumno> tableView;
 
-	public  SeleccionarAlumno(Scene previousScene, Stage stage) {
+	public  SeleccionarAlumno(BorderPane previousPane, Stage stage) {
 
 		this.stage = stage;
-		this.previousScene = previousScene;
+		this.previousPane = previousPane;
 		initializeData();
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Selección de alumno");
 		
 		/* top */
@@ -59,8 +58,7 @@ public class SeleccionarAlumno {
 		barra = new BarraEstado("Selecciona un alumno y pulsa continuar");
 		borderPane.setBottom(barra.getHbox());
 		
-		currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 	
 	public TableView<Alumno> crearTabla() {
@@ -110,6 +108,9 @@ public class SeleccionarAlumno {
 	    tableView.getColumns().add(column5);
 	    tableView.getColumns().add(column6);
 	    tableView.getColumns().add(column7);
+	    
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tableView.setPrefHeight(App.ALTO*2);
 		
 		return tableView;
 	}
@@ -125,14 +126,14 @@ public class SeleccionarAlumno {
     	}
     	botones[0].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				stage.setScene(previousScene);
+				stage.getScene().setRoot(previousPane);
 			}
 		});
     	botones[1].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					new VistaAlumno(previousScene, stage, seleccionado, Origen.SELECCION);
+					new VistaAlumno(previousPane, stage, seleccionado, Origen.SELECCION);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para consultar");
 				}

@@ -15,7 +15,6 @@ import entity.Alumno;
 import entity.Mes;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
@@ -29,21 +28,20 @@ import ui_utils.UIElement;
 public class VistaRecibo {
 
 	private Stage stage;
-	private Scene currentScene;
-	private Scene previousScene;
+	private BorderPane borderPane, previousPane;
 	private BarraEstado barra;
 	private Mes mes;
 	private Alumno alumno;
 	private HBox buttons_hbox;
 	private final String titulo = "Recibo academia Ritmo Latino";
 
-	public  VistaRecibo(Scene previousScene, Stage stage, Mes mes, Alumno alumno) {
+	public  VistaRecibo(BorderPane previousPane, Stage stage, Mes mes, Alumno alumno) {
 		
-		this.previousScene = previousScene;
+		this.previousPane = previousPane;
 		this.stage = stage;
 		this.alumno = alumno;
 		this.mes = mes;
-		BorderPane borderPane = new BorderPane();
+		borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Generar recibo");
 		
 		/* top */
@@ -78,8 +76,7 @@ public class VistaRecibo {
 		barra = new BarraEstado("Pulsa Exportar a PDF para generar un fichero .pdf del recibo.");
 		borderPane.setBottom(barra.getHbox());
 		
-		currentScene = new Scene(borderPane);
-		stage.setScene(currentScene);
+		stage.getScene().setRoot(borderPane);
 	}
 
 	public String[] getDescripcion() {
@@ -106,7 +103,7 @@ public class VistaRecibo {
     	}
     	botones[0].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				stage.setScene(previousScene);
+				stage.getScene().setRoot(previousPane);
 			}
 		});
     	botones[1].setOnAction(new EventHandler<ActionEvent>() {
