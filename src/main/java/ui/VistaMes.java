@@ -23,7 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -85,8 +85,8 @@ public class VistaMes {
     	buscar.setPrefSize(200, 20);
     	right_vbox.getChildren().add(buscar);
     	
-    	buscar.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	buscar.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				tableView.getItems().removeAll(listaAlumnos);
 				for(Alumno a : listaAlumnos) {
 					if(!nombre.getText().isEmpty()) {
@@ -115,8 +115,8 @@ public class VistaMes {
     	limpiarBusqueda.setPrefSize(200, 20);
     	right_vbox.getChildren().add(limpiarBusqueda);
     	
-    	limpiarBusqueda.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	limpiarBusqueda.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				rellenarTabla();
 			}
 		});
@@ -138,8 +138,8 @@ public class VistaMes {
     	filtrar.setPrefSize(200, 20);
     	right_vbox.getChildren().add(filtrar);
     	
-    	filtrar.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	filtrar.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				tableView.getItems().removeAll(listaAlumnos);
 				boolean option;
 				if(group.getSelectedToggle().equals(rb1)){
@@ -159,8 +159,8 @@ public class VistaMes {
     	limpiarFiltro.setPrefSize(200, 20);
     	right_vbox.getChildren().add(limpiarFiltro);
     	
-    	limpiarFiltro.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	limpiarFiltro.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				rellenarTabla();
 			}
 		});
@@ -184,8 +184,8 @@ public class VistaMes {
     	volver_hbox.getChildren().add(volver);
     	bottom_vbox.getChildren().add(volver_hbox);
     	
-    	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	volver.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(origen == Origen.SELECCION) {
 					new SeleccionarMes(previousScene, stage);
 				} else {
@@ -262,8 +262,8 @@ public class VistaMes {
         	buttons_hbox.getChildren().add(b);
     	}
 		
-    	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[0].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					new VistaAlumno(currentScene, stage, seleccionado);
@@ -272,8 +272,8 @@ public class VistaMes {
 				}
 			}
 		});
-    	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[1].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
@@ -286,8 +286,8 @@ public class VistaMes {
 				}
 			}
 		});
-    	botones[2].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[2].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					listaAlumnos.remove(seleccionado);
@@ -301,8 +301,8 @@ public class VistaMes {
 				
 			}
 		});
-    	botones[3].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[3].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
@@ -315,8 +315,8 @@ public class VistaMes {
 				}
 			}
 		});
-    	botones[4].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[4].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -350,8 +350,8 @@ public class VistaMes {
 				
 			}
 		});
-    	botones[5].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[5].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Confirmar Acción");
 				alert.setHeaderText("¿Seguro que quieres condonar el mes?");

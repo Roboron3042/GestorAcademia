@@ -24,7 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -180,8 +180,8 @@ public class VistaAlumno {
     	volver.setPrefSize(200, 20);
     	volver_hbox.getChildren().add(volver);
     	bottom_vbox.getChildren().add(volver_hbox);
-    	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	volver.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(origen == Origen.SELECCION) {
 					new SeleccionarAlumno(previousScene, stage);
 				} else {
@@ -218,8 +218,8 @@ public class VistaAlumno {
     	}
 
     	buttons_bot.getChildren().add(botones[0]);
-    	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[0].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(nombre.getText().isEmpty()) {
 					barra.setEstado("El nombre del alumno no puede estar en blanco");
 				} else if(apellidos.getText().isEmpty()) {
@@ -260,8 +260,8 @@ public class VistaAlumno {
     	if(origen != Origen.CREACION) {
     		buttons_bot.getChildren().add(botones[1]);
     	}
-    	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[1].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Confirmar Acción");
 				alert.setHeaderText("¿Seguro que quieres eliminar este alumno?");
@@ -282,8 +282,8 @@ public class VistaAlumno {
 			}
 		});
     	buttons_table.getChildren().add(botones[2]);
-    	botones[2].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[2].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tablaMeses.getSelectionModel().getSelectedItems().size() > 0) {
 					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
 					seleccionado.setPagado(!seleccionado.isPagado());
@@ -295,8 +295,8 @@ public class VistaAlumno {
 			}
 		});
     	buttons_table.getChildren().add(botones[3]);
-    	botones[3].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[3].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tablaMeses.getSelectionModel().getSelectedItems().size() > 0) {
 					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
 					listaMeses.remove(seleccionado);
@@ -310,8 +310,8 @@ public class VistaAlumno {
 			}	
 		});
     	buttons_table.getChildren().add(botones[4]);
-    	botones[4].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[4].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tablaMeses.getSelectionModel().getSelectedItems().size() > 0) {
 					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
@@ -325,8 +325,8 @@ public class VistaAlumno {
 			}
 		});
     	centro.getChildren().add(botones[5]);
-    	botones[5].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[5].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				Mes mes = new Mes(month.getSelectionModel().getSelectedIndex() + 1, year.getValue());
 				if(MesAlumno.listaMesAlumno(alumno, mes).isEmpty()) {
 					boolean pagado = false;

@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -123,13 +123,13 @@ public class SeleccionarAlumno {
         	b.setPrefSize(300, 20);
     		vhbox.getChildren().add(b);
     	}
-    	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[0].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				stage.setScene(previousScene);
 			}
 		});
-    	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[1].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					new VistaAlumno(previousScene, stage, seleccionado, Origen.SELECCION);

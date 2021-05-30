@@ -5,11 +5,11 @@ import bd.BD;
 import entity.Mes;
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -76,44 +76,40 @@ public class App extends Application {
         	b.setPrefSize(300, 20);
     		vbox.getChildren().add(b);
     	}
-		
-    	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[0].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				LocalDate hoy = LocalDate.now();
 				Mes mes = new Mes(hoy.getMonthValue(), hoy.getYear());
 				new VistaMes(scene, stage, mes);
 			}
-		});
-    	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	});
+    	botones[1].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				new SeleccionarMes(scene, stage);
 			}
 		});
-    	botones[2].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[2].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				new SeleccionarAlumno(scene, stage);
-				
 			}
 		});
-    	botones[3].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[3].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				new VistaAlumno(scene, stage, null, Origen.CREACION);
-				
 			}
 		});
-    	botones[4].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[4].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				System.out.println("Botón pulsado");
-				
 			}
 		});
-    	botones[5].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[5].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-    	botones[6].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[6].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});

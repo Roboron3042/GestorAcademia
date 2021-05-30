@@ -17,7 +17,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -104,13 +104,13 @@ public class VistaRecibo {
         	b.setPrefSize(300, 20);
         	buttons_hbox.getChildren().add(b);
     	}
-    	botones[0].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[0].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				stage.setScene(previousScene);
 			}
 		});
-    	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
-			public void handle(MouseEvent arg0) {
+    	botones[1].setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
 				PDDocument document = new PDDocument();
 				PDPage page = new PDPage();
 				document.addPage(page);
