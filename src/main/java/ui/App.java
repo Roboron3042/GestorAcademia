@@ -1,7 +1,6 @@
 package ui;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import bd.BD;
 import entity.Alumno;
@@ -103,12 +102,12 @@ public class App extends Application {
 		});
     	botones[4].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				System.out.println("Botón pulsado");
+				new Ayuda(scene, stage);
 			}
 		});
     	botones[5].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				System.exit(0);
+				new AcercaDe(scene, stage);
 			}
 		});
     	botones[6].setOnAction(new EventHandler<ActionEvent>() {
@@ -124,7 +123,7 @@ public class App extends Application {
 			protected Void call() throws Exception {
 		    	BD bd = new BD();
 		    	bd.iniciar();
-		    	bd.poblar();
+		    	//bd.poblar();
 		    	bd.finalize();
 				LocalDate hoy = LocalDate.now();
 				mes = new Mes(hoy.getMonthValue(), hoy.getYear());
