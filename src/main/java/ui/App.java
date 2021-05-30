@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import ui_utils.BarraEstado;
 import ui_utils.Origen;
 import ui_utils.UIElement;
+import java.net.*;
 
 
 /**
@@ -31,12 +33,12 @@ public class App extends Application {
 	private VBox vbox;
 	private Scene scene;
 	private Mes mes;
-	
 
     @Override
     public void start(Stage stage) {
 
 		this.stage = stage;
+		justOne();
 		BorderPane borderPane = new BorderPane();
 		initializeData();
 		stage.setTitle("Ritmo Latino Gestión");
@@ -52,10 +54,12 @@ public class App extends Application {
 	    vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 	    vbox.setSpacing(10);
+	    vbox.setPadding(new Insets(0, 10, 0, 10));
 		borderPane.setCenter(vbox);
 		
 		scene = new Scene(borderPane);
-		
+
+		stage.setMaximized(true);
 		stage.setScene(scene);
 		stage.show();
     }
@@ -148,5 +152,37 @@ public class App extends Application {
 			mostrarBotones(); 
 		});
 	}
-
+	public void justOne() {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				try {
+					Socket clientSocket = new Socket("localhost", 111);
+					clientSocket.close();
+					System.out.println("*** Already running!");
+					System.exit(1);
+					return null;
+				}
+				catch (Exception e) {
+					// Create the server socket
+					ServerSocket serverSocket = new ServerSocket(111, 1);
+					// Wait for a connection
+					Socket clientSocket = serverSocket.accept();
+					serverSocket.close();
+					clientSocket.close();
+					return null;
+				}
+			}
+		};
+		new Thread(task).start();
+		task.setOnSucceeded(event -> {
+			stage.setIconified(true);
+			stage.setIconified(false);
+			justOne();
+		});
+	}
+    @Override
+    public void stop() {
+		System.exit(0);
+    }
 }

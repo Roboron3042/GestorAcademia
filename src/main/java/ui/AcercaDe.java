@@ -64,7 +64,7 @@ public class AcercaDe {
 		});
     	buttons_hbox.getChildren().add(volver);
 		borderPane.setBottom(buttons_hbox);
-		
+
 		Scene currentScene = new Scene(borderPane);
 		stage.setScene(currentScene);
 	}
