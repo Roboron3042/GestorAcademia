@@ -31,7 +31,9 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
 
+		this.stage = stage;
 		BorderPane borderPane = new BorderPane();
+		initializeData();
 		stage.setTitle("Ritmo Latino Gestión");
 		
 		/* top */
@@ -49,25 +51,8 @@ public class App extends Application {
 		
 		scene = new Scene(borderPane);
 		
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-		    	BD bd = new BD();
-		    	bd.iniciar();
-		    	//bd.poblar();
-		    	bd.finalize();
-				return null;
-			}
-		};
-		new Thread(task).start();
-		task.setOnSucceeded(event -> {
-	    	barra.setEstado("Base de datos inicializada. Listo.");
-			mostrarBotones(); 
-		});
-		
 		stage.setScene(scene);
 		stage.show();
-		this.stage = stage;
     }
 
     public static void main(String[] args) {
@@ -95,17 +80,17 @@ public class App extends Application {
 			public void handle(MouseEvent arg0) {
 				LocalDate hoy = LocalDate.now();
 				Mes mes = new Mes(hoy.getMonthValue(), hoy.getYear());
-				stage.setScene(new VistaMes(scene, stage, mes, false).getScene());
+				new VistaMes(scene, stage, mes);
 			}
 		});
     	botones[1].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				stage.setScene(new SeleccionarMes(scene, stage).getScene());
+				new SeleccionarMes(scene, stage);
 			}
 		});
     	botones[2].setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				stage.setScene(new SeleccionarAlumno(scene, stage).getScene());
+				new SeleccionarAlumno(scene, stage);
 				
 			}
 		});
@@ -132,5 +117,23 @@ public class App extends Application {
 			}
 		});
     }
+    
+	private void initializeData() {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+		    	BD bd = new BD();
+		    	bd.iniciar();
+		    	//bd.poblar();
+		    	bd.finalize();
+				return null;
+			}
+		};
+		new Thread(task).start();
+		task.setOnSucceeded(event -> {
+	    	barra.setEstado("Base de datos inicializada. Listo.");
+			mostrarBotones(); 
+		});
+	}
 
 }

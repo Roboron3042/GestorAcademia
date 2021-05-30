@@ -79,11 +79,9 @@ public class VistaRecibo {
 		borderPane.setBottom(barra.getHbox());
 		
 		currentScene = new Scene(borderPane);
+		stage.setScene(currentScene);
 	}
-	
-	public Scene getScene() {
-		return currentScene;
-	}
+
 	public String[] getDescripcion() {
 		LocalDate hoy = LocalDate.now();
 		return 	new String[]{"Este documento acredita que el alumno: ",

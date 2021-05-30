@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
+import ui_utils.Origen;
 import ui_utils.UIElement;
 
 public class VistaMes {
@@ -42,10 +43,15 @@ public class VistaMes {
 	private Mes mes;
     private List<Alumno> listaAlumnos = new ArrayList<Alumno>();
 
-	public  VistaMes(Scene previousScene, Stage stage, Mes mes, boolean fromSelMes) {
+    public  VistaMes(Scene previousScene, Stage stage, Mes mes) {
+    	this(previousScene, stage, mes, Origen.ESTANDAR);
+    }
+    
+	public  VistaMes(Scene previousScene, Stage stage, Mes mes, Origen origen) {
 		
 		this.mes = mes;
 		this.stage = stage;
+		initializeData();
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Vista de alumnos de " + mes.toString());
 		
@@ -180,8 +186,8 @@ public class VistaMes {
     	
     	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				if(fromSelMes) {
-					stage.setScene(new SeleccionarMes(previousScene, stage).getScene());
+				if(origen == Origen.SELECCION) {
+					new SeleccionarMes(previousScene, stage);
 				} else {
 					stage.setScene(previousScene);
 				}
@@ -191,12 +197,9 @@ public class VistaMes {
 		barra = new BarraEstado("Cargando vista de alumnos, por favor espere...");
     	bottom_vbox.getChildren().add(barra.getHbox());
 		borderPane.setBottom(bottom_vbox);
-		
+
 		currentScene = new Scene(borderPane);
-	}
-	
-	public Scene getScene() {
-		return currentScene;
+		stage.setScene(currentScene);
 	}
 	
 	public TableView<Alumno> crearTabla(Mes mes) {
@@ -240,20 +243,6 @@ public class VistaMes {
 	    tableView.getColumns().add(column4);
 	    tableView.getColumns().add(column5);
 	    tableView.getColumns().add(column6);
-	    
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				listaAlumnos = Alumno.listaAlumnosMes(mes);
-				return null;
-			}
-		};
-		new Thread(task).start();
-		task.setOnSucceeded(event -> {
-			barra.setEstado("Lista de alumnos cargada con éxito.");
-		    rellenarTabla();
-		    mostrarBotones();
-		});
 		
 		return tableView;
 	}
@@ -277,7 +266,7 @@ public class VistaMes {
 			public void handle(MouseEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					stage.setScene(new VistaAlumno(currentScene, stage, seleccionado, false).getScene());
+					new VistaAlumno(currentScene, stage, seleccionado);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para consultar");
 				}
@@ -317,7 +306,7 @@ public class VistaMes {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
-						stage.setScene(new VistaRecibo(currentScene, stage, mes, seleccionado).getScene());
+						new VistaRecibo(currentScene, stage, mes, seleccionado);
 					} else {
 						barra.setEstado("No se puede generar recibo de un alumno que no ha pagado el mes");
 					}
@@ -391,5 +380,21 @@ public class VistaMes {
 		for(Alumno a : listaAlumnos) {
 			tableView.getItems().add(a);
 		}
+	}
+	
+	private void initializeData() {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				listaAlumnos = Alumno.listaAlumnosMes(mes);
+				return null;
+			}
+		};
+		new Thread(task).start();
+		task.setOnSucceeded(event -> {
+			barra.setEstado("Lista de alumnos cargada con éxito.");
+		    rellenarTabla();
+		    mostrarBotones();
+		});
 	}
 }

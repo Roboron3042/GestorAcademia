@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
+import ui_utils.Origen;
 import ui_utils.UIElement;
 
 public class SeleccionarAlumno {
@@ -34,6 +35,7 @@ public class SeleccionarAlumno {
 
 		this.stage = stage;
 		this.previousScene = previousScene;
+		initializeData();
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Selección de alumno");
 		
@@ -58,6 +60,7 @@ public class SeleccionarAlumno {
 		borderPane.setBottom(barra.getHbox());
 		
 		currentScene = new Scene(borderPane);
+		stage.setScene(currentScene);
 	}
 	
 	public TableView<Alumno> crearTabla() {
@@ -107,26 +110,8 @@ public class SeleccionarAlumno {
 	    tableView.getColumns().add(column5);
 	    tableView.getColumns().add(column6);
 	    tableView.getColumns().add(column7);
-	    
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				listaAlumnos = Alumno.listaAlumnos();
-				return null;
-			}
-		};
-		new Thread(task).start();
-		task.setOnSucceeded(event -> {
-			barra.setEstado("Lista de alumnos cargada con éxito.");
-		    rellenarTabla();
-		    mostrarBotones();
-		});
 		
 		return tableView;
-	}
-	
-	public Scene getScene() {
-		return currentScene;
 	}
 	
 	private void mostrarBotones() {
@@ -147,7 +132,7 @@ public class SeleccionarAlumno {
 			public void handle(MouseEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					stage.setScene(new VistaAlumno(previousScene, stage, seleccionado, true).getScene());
+					new VistaAlumno(previousScene, stage, seleccionado, Origen.SELECCION);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para consultar");
 				}
@@ -159,5 +144,21 @@ public class SeleccionarAlumno {
 		for(Alumno a : listaAlumnos) {
 			tableView.getItems().add(a);
 		}
+	}
+	
+	private void initializeData() {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				listaAlumnos = Alumno.listaAlumnos();
+				return null;
+			}
+		};
+		new Thread(task).start();
+		task.setOnSucceeded(event -> {
+			barra.setEstado("Lista de alumnos cargada con éxito.");
+		    rellenarTabla();
+		    mostrarBotones();
+		});
 	}
 }

@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
+import ui_utils.Origen;
 import ui_utils.UIElement;
 
 public class SeleccionarMes {
@@ -34,7 +35,7 @@ public class SeleccionarMes {
 
 		this.stage = stage;
 		this.previousScene = previousScene;
-	    tableView = new TableView<Mes>(); 
+		initializeData();
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Selección de mes");
 		
@@ -48,8 +49,7 @@ public class SeleccionarMes {
 		vbox.setPadding(new Insets(0, 10, 10, 10));
 		borderPane.setCenter(vbox);
 		
-		tableView = crearTabla();
-		vbox.getChildren().add(tableView);
+		vbox.getChildren().add(crearTabla());
 
 		vhbox = new HBox();
 		vhbox.setAlignment(Pos.CENTER);
@@ -61,9 +61,11 @@ public class SeleccionarMes {
 		borderPane.setBottom(barra.getHbox());
 		
 		currentScene = new Scene(borderPane);
+		stage.setScene(currentScene);
 	}
 	
 	public TableView<Mes> crearTabla() {
+	    tableView = new TableView<Mes>(); 
 
 	    TableColumn<Mes, String> column1 = new TableColumn<>("Mes");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -75,26 +77,8 @@ public class SeleccionarMes {
 
 	    tableView.getColumns().add(column1);
 	    tableView.getColumns().add(column2);
-	    
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				listaMeses = Mes.ListaMeses();
-				return null;
-			}
-		};
-		new Thread(task).start();
-		task.setOnSucceeded(event -> {
-			barra.setEstado("Lista de meses cargada con éxito.");
-		    rellenarTabla();
-		    mostrarBotones();
-		});
 		
 		return tableView;
-	}
-	
-	public Scene getScene() {
-		return currentScene;
 	}
 	
 	private void mostrarBotones() {
@@ -115,7 +99,7 @@ public class SeleccionarMes {
 			public void handle(MouseEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Mes seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					stage.setScene(new VistaMes(previousScene, stage, seleccionado, true).getScene());
+					new VistaMes(previousScene, stage, seleccionado, Origen.SELECCION);
 				} else {
 					barra.setEstado("No se ha seleccionado ningún mes para consultar");
 				}
@@ -127,5 +111,20 @@ public class SeleccionarMes {
 		for(Mes m : listaMeses) {
 			tableView.getItems().add(m);
 		}
+	}
+	private void initializeData() {
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				listaMeses = Mes.ListaMeses();
+				return null;
+			}
+		};
+		new Thread(task).start();
+		task.setOnSucceeded(event -> {
+			barra.setEstado("Lista de meses cargada con éxito.");
+		    rellenarTabla();
+		    mostrarBotones();
+		});
 	}
 }

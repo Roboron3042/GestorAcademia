@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.derby.tools.sysinfo;
-
 import entity.Alumno;
 import entity.Mes;
 import entity.MesAlumno;
@@ -33,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
+import ui_utils.Origen;
 import ui_utils.UIElement;
 
 public class VistaAlumno {
@@ -45,22 +44,26 @@ public class VistaAlumno {
 	private List<MesAlumno> listaMeses;
 	private HBox buttons_bot, buttons_table;
 	private VBox centro;
-	private boolean fromSel;
+	private Origen origen;
 	private ComboBox<String> month, pagadoStr;
 	private ComboBox<Integer> year;
 	private TextField nombre, apellidos, telefono, telefono_sec, modalidad, cuantia;
 	private RadioButton rbAlta, rbBaja;
 	private ToggleGroup tgBaja;
+	
+	public  VistaAlumno(Scene previousScene, Stage stage, Alumno alumno) {
+		this(previousScene, stage, alumno, Origen.ESTANDAR);
+	}
 
-	public  VistaAlumno(Scene previousScene, Stage stage, Alumno alumno, boolean fromSel) {
+	public  VistaAlumno(Scene previousScene, Stage stage, Alumno alumno, Origen origen) {
 		
-		this.alumno = alumno;
 		this.stage = stage;
 		this.previousScene = previousScene;
-		this.fromSel = fromSel;
+		this.origen = origen;
+		this.alumno = alumno;
+		initializeData();
 		BorderPane borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Consultar o modificar alumno " + alumno.toString());
-		initializeData();
 		
 		/* top */
 		UIElement.Titulo("Detalles del alumno " + alumno.toString(), borderPane);
@@ -178,8 +181,8 @@ public class VistaAlumno {
     	bottom_vbox.getChildren().add(volver_hbox);
     	volver.setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
 			public void handle(MouseEvent arg0) {
-				if(fromSel) {
-					stage.setScene(new SeleccionarAlumno(previousScene, stage).getScene());
+				if(origen == Origen.SELECCION) {
+					new SeleccionarAlumno(previousScene, stage);
 				} else {
 					stage.setScene(previousScene);
 				}
@@ -190,10 +193,7 @@ public class VistaAlumno {
 		borderPane.setBottom(bottom_vbox);
 		
 		currentScene = new Scene(borderPane);
-	}
-	
-	public Scene getScene() {
-		return currentScene;
+		stage.setScene(currentScene);
 	}
 	
 	private void rellenarTabla() {
@@ -259,8 +259,8 @@ public class VistaAlumno {
 				    	ma.eliminar();
 				    }
 					alumno.eliminar();
-					if(fromSel) {
-						stage.setScene(new SeleccionarAlumno(previousScene, stage).getScene());
+					if(origen == Origen.SELECCION) {
+						new SeleccionarAlumno(previousScene, stage);
 					} else {
 						stage.setScene(previousScene);
 					}
@@ -301,7 +301,7 @@ public class VistaAlumno {
 				if(tablaMeses.getSelectionModel().getSelectedItems().size() > 0) {
 					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
 					if(seleccionado.isPagado()) {
-						stage.setScene(new VistaRecibo(currentScene, stage, new Mes(seleccionado.getMes()), alumno).getScene());
+						new VistaRecibo(currentScene, stage, new Mes(seleccionado.getMes()), alumno);
 					} else {
 						barra.setEstado("No se puede generar recibo de un alumno que no ha pagado el mes");
 					}
