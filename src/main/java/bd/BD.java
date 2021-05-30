@@ -194,7 +194,8 @@ public class BD
     	crear(	"mes", "CREATE TABLE mes "
     			+ "(id varchar(128) PRIMARY KEY,"
     			+ "mes int,"
-    			+ "ano int)");
+    			+ "ano int,"
+    			+ "procesado boolean)");
     	crear(	"mesAlumno", "CREATE TABLE mesAlumno "
     			+ "(id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
     			+ "alumno int REFERENCES alumno(id),"
@@ -206,13 +207,13 @@ public class BD
 		insertAuto("INSERT INTO ALUMNO VALUES (DEFAULT, 123456789, 0, 'Pepito', 'Tadeo', 'Salsa', 30, FALSE)");
 		insertAuto("INSERT INTO ALUMNO VALUES (DEFAULT, 147258369, 0, 'Jorgito', 'Tadeo', 'Bachata', 45, TRUE)");
 		System.out.println("Alumnos insertados");
-		insert("INSERT INTO MES VALUES ('2021-05', 5, 2021)");
-		insert("INSERT INTO MES VALUES ('2021-04', 4, 2021)");
+		insert("INSERT INTO MES VALUES ('2021-05', 5, 2021, FALSE)");
+		insert("INSERT INTO MES VALUES ('2021-04', 4, 2021, TRUE)");
 		System.out.println("Meses insertados");
 		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 1, '2021-04', TRUE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 1, '2021-05', TRUE)");
+		//insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 1, '2021-05', TRUE)");
 		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 2, '2021-04', TRUE)");
-		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 2, '2021-05', FALSE)");
+		//insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 2, '2021-05', FALSE)");
 		insert("INSERT INTO MESALUMNO VALUES (DEFAULT, 3, '2021-04', FALSE)");
 		System.out.println("MesAlumnos insertados");
 	}

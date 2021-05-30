@@ -15,6 +15,10 @@ public class MesAlumno {
 	private static final String TABLA = "MESALUMNO";
 	private Boolean pagado;
 	
+	public MesAlumno(Integer alumno, String mes) {
+		this(alumno, mes, false);
+	}
+	
 	public MesAlumno(Integer alumno, String mes, boolean pagado) {
 		BD bd = new BD();
 		this.id = bd.insertAuto("INSERT INTO " + TABLA + " VALUES (DEFAULT," + alumno + ",'" + mes + "'," + pagado + ")");

@@ -11,6 +11,7 @@ public class Mes {
 	private String id;
 	private Integer mes;
 	private Integer año;
+	private boolean procesado;
 	private static final String TABLA = "mes";
 	
 	public Mes(String id) {
@@ -20,6 +21,7 @@ public class Mes {
 		this.id = id;
 		this.mes = (Integer) mes[1];
 		this.año = (Integer) mes[2];
+		this.procesado = (boolean) mes[3];
 	}
 	
 	public Mes(Integer mes, Integer año) {
@@ -28,13 +30,19 @@ public class Mes {
 		} else {
 			this.id = año + "-" + mes;
 		}
-		this.mes = mes;
-		this.año = año;		
 		BD bd = new BD();
 		if(bd.select("SELECT * FROM " + TABLA + " WHERE id = '" + id + "'").isEmpty()) {
-			bd.insert("INSERT INTO " + TABLA + " VALUES ('" + id + "'," + mes + "," + año + ")");			
+			bd.insert("INSERT INTO " + TABLA + " VALUES ('" + id + "'," + mes + "," + año + "," + false + ")");	
+			this.mes = mes;
+			this.año = año;	
+			this.procesado = false;
+		} else {
+			Object[] m = bd.select("SELECT * FROM " + TABLA + " WHERE id = '" + id + "'").get(0);
+			this.mes = (Integer) m[1];
+			this.año = (Integer) m[2];
+			this.procesado = (boolean) m[3];
 		}
-		bd.finalize();
+		bd.finalize();	
 	}
 	
 	public String toString() {
@@ -61,6 +69,10 @@ public class Mes {
 		return listaMeses;
 	}
 	
+	public int compareTo(Mes m) {
+		return m.getId().compareTo(this.getId());
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -72,6 +84,18 @@ public class Mes {
 	public String getNombre() {
 		return this.toString();
 	}
+
+	public boolean isProcesado() {
+		return procesado;
+	}
+
+	public void setProcesado(boolean procesado) {
+		BD bd = new BD();
+		bd.update("UPDATE " + TABLA + " SET procesado = " + procesado + " WHERE id = '" + id + "'");
+		bd.finalize();
+		this.procesado = procesado;
+	}
+	
 	
 	
 

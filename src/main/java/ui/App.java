@@ -1,8 +1,12 @@
 package ui;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import bd.BD;
+import entity.Alumno;
 import entity.Mes;
+import entity.MesAlumno;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -27,6 +31,7 @@ public class App extends Application {
 	private Stage stage;
 	private VBox vbox;
 	private Scene scene;
+	private Mes mes;
 	
 
     @Override
@@ -78,8 +83,6 @@ public class App extends Application {
     	}
     	botones[0].setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				LocalDate hoy = LocalDate.now();
-				Mes mes = new Mes(hoy.getMonthValue(), hoy.getYear());
 				new VistaMes(scene, stage, mes);
 			}
     	});
@@ -121,14 +124,28 @@ public class App extends Application {
 			protected Void call() throws Exception {
 		    	BD bd = new BD();
 		    	bd.iniciar();
-		    	//bd.poblar();
+		    	bd.poblar();
 		    	bd.finalize();
+				LocalDate hoy = LocalDate.now();
+				mes = new Mes(hoy.getMonthValue(), hoy.getYear());
+		    	if(!mes.isProcesado()) {
+			    	barra.setEstado("Detectado nuevo mes. Añadiendo alumnos...");
+			    	for(Alumno a : Alumno.listaAlumnos()) {
+			    		if(!a.isBaja() && MesAlumno.listaMesAlumno(a,mes).isEmpty()) {
+			    			System.out.println("Alumno" + a.toString());
+			    			new MesAlumno(a.getId(),mes.getId());
+			    		}
+			    	}
+			    	mes.setProcesado(true);
+			    	barra.setEstado("Se ha añadido a los alumnos al nuevo mes");
+		    	} else {
+			    	barra.setEstado("Base de datos inicializada. Listo.");
+		    	}
 				return null;
 			}
 		};
 		new Thread(task).start();
 		task.setOnSucceeded(event -> {
-	    	barra.setEstado("Base de datos inicializada. Listo.");
 			mostrarBotones(); 
 		});
 	}
