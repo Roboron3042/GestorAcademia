@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -78,6 +79,16 @@ public class SeleccionarMes {
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	    tableView.setPrefHeight(App.ALTO*2);
 	    tableView.setMaxWidth(App.ANCHO/2);
+	    
+	    tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        @Override 
+	        public void handle(MouseEvent event) {
+	            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					Mes seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
+					new VistaMes(previousPane, stage, seleccionado, Origen.SELECCION);                
+	            }
+	        }
+	    });
 		
 		return tableView;
 	}

@@ -81,6 +81,7 @@ public class VistaRecibo {
 
 	public String[] getDescripcion() {
 		LocalDate hoy = LocalDate.now();
+		String str = new DateFormatSymbols().getMonths()[hoy.getMonthValue() - 1] + " de " + hoy.getYear();
 		return 	new String[]{"Este documento acredita que el alumno: ",
 				alumno.toString(),
 				"ha pagado las clases de:",
@@ -89,8 +90,7 @@ public class VistaRecibo {
 				mes.toString(),
 				"por una cuantía de:",
 				alumno.getCuantia() + "€",
-				"Algeciras, a " + hoy.getDayOfMonth() + " de " + 
-				new DateFormatSymbols().getMonths()[hoy.getMonthValue() - 1] + " de " + hoy.getYear()};
+				"Algeciras, a " + str.substring(0, 1).toUpperCase() + str.substring(1)};
 	}
 	private void mostrarBotones() {
     	Button botones[] = new Button[] {

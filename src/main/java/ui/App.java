@@ -14,8 +14,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ui_utils.BarraEstado;
 import ui_utils.Origen;
@@ -47,7 +51,7 @@ public class App extends Application {
 		stage.setTitle("Ritmo Latino Gestión");
 		
 		/* top */
-		UIElement.Titulo("Ritmo Latino Gestión", borderPane);
+		//UIElement.Titulo("Ritmo Latino Gestión", borderPane);
 		
 		/* bottom */
 		barra = new BarraEstado("Iniciando la base de datos, por favor espere...");
@@ -57,9 +61,18 @@ public class App extends Application {
 	    vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 	    vbox.setSpacing(10);
-	    vbox.setPadding(new Insets(0, 10, 0, 10));
-		borderPane.setCenter(vbox);
+	    vbox.setPadding(new Insets(0, 10, 0, ANCHO/6));
+		BorderPane.setAlignment(vbox, Pos.CENTER);
+		borderPane.setLeft(vbox);
+
+		Text titulo = new Text("Ritmo Latino Gestión\n\n");
+		titulo.setFont(new Font(32));
+		vbox.getChildren().add(titulo);
 		
+		Image logo = new Image("file:rma.jpg", true);
+		ImageView imagen = new ImageView(logo);
+		borderPane.setCenter(imagen);
+	
 		scene = new Scene(borderPane);
 
 		stage.setMinWidth(ANCHO);

@@ -23,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -39,6 +40,7 @@ public class VistaAlumno {
 	private BorderPane borderPane, previousPane;
 	private Stage stage;
 	private Alumno alumno;
+	private Mes previousMes;
 	private TableView<MesAlumno> tablaMeses;
 	private List<MesAlumno> listaMeses;
 	private HBox buttons_bot, buttons_table;
@@ -53,13 +55,18 @@ public class VistaAlumno {
 	public  VistaAlumno(BorderPane previousPane, Stage stage, Alumno alumno) {
 		this(previousPane, stage, alumno, Origen.ESTANDAR);
 	}
-
+	
 	public  VistaAlumno(BorderPane previousPane, Stage stage, Alumno alumno, Origen origen) {
+		this(previousPane, stage, alumno, origen, null);
+	}
+
+	public  VistaAlumno(BorderPane previousPane, Stage stage, Alumno alumno, Origen origen, Mes mes) {
 		
 		this.stage = stage;
 		this.previousPane = previousPane;
 		this.origen = origen;
 		this.alumno = alumno;
+		this.previousMes = mes;
 		initializeData();
 		borderPane = new BorderPane();
 		if(origen == Origen.CREACION) {
@@ -183,6 +190,8 @@ public class VistaAlumno {
 			public void handle(ActionEvent arg0) {
 				if(origen == Origen.SELECCION) {
 					new SeleccionarAlumno(previousPane, stage);
+				} else if( origen == Origen.VISTA){
+					new VistaMes(previousPane, stage, mes);
 				} else {
 					stage.getScene().setRoot(previousPane);
 				}
@@ -279,6 +288,8 @@ public class VistaAlumno {
 					alumno.eliminar();
 					if(origen == Origen.SELECCION) {
 						new SeleccionarAlumno(previousPane, stage);
+					} else if(origen == Origen.VISTA){
+						new VistaMes(previousPane, stage, previousMes);
 					} else {
 						stage.getScene().setRoot(previousPane);
 					}
@@ -391,6 +402,18 @@ public class VistaAlumno {
 	    //tablaMeses.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	    tablaMeses.setPrefHeight(App.ALTO*2);
 	    //tablaMeses.setMaxWidth(App.ANCHO/3);
+	    
+	    /*
+	    tablaMeses.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        @Override 
+	        public void handle(MouseEvent event) {
+	            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					MesAlumno seleccionado = tablaMeses.getSelectionModel().getSelectedItems().get(0);
+					new VistaMes(borderPane, stage, new Mes(seleccionado.getMes()));                
+	            }
+	        }
+	    });
+	    */
 	    
 	    return tablaMeses;
 	}

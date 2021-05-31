@@ -147,8 +147,9 @@ public class MesAlumno {
 		StringTokenizer st = new StringTokenizer(mes);
 		Integer y = Integer.parseInt(st.nextToken("-"));
 		Integer m = Integer.parseInt(st.nextToken("-"));
-
-		return  new DateFormatSymbols().getMonths()[m - 1] + " de " + y;
+		
+		String str = (new DateFormatSymbols().getMonths()[m - 1] + " de " + y);
+		return  str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
 	public void setPagado(boolean pagado) {

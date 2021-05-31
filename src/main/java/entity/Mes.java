@@ -4,6 +4,7 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import bd.BD;
 
 public class Mes {
@@ -46,7 +47,8 @@ public class Mes {
 	}
 	
 	public String toString() {
-		return  new DateFormatSymbols().getMonths()[mes - 1] + " de " + año;
+		String str = (new DateFormatSymbols().getMonths()[mes - 1] + " de " + año);
+		return  str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 	private Mes() {
 		// Para uso interno

@@ -6,6 +6,7 @@ import entity.Alumno;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -111,6 +112,16 @@ public class SeleccionarAlumno {
 	    
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	    tableView.setPrefHeight(App.ALTO*2);
+	    
+	    tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        @Override 
+	        public void handle(MouseEvent event) {
+	            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
+					new VistaAlumno(previousPane, stage, seleccionado, Origen.SELECCION);                
+	            }
+	        }
+	    });
 		
 		return tableView;
 	}

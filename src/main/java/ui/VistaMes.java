@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -36,7 +37,7 @@ public class VistaMes {
 	
 	private TableView<Alumno> tableView;
 	private Stage stage;
-	private BorderPane borderPane;
+	private BorderPane borderPane, previousPane;
 	private BarraEstado barra;
 	private HBox buttons_hbox;
 	private Mes mes;
@@ -50,6 +51,7 @@ public class VistaMes {
 		
 		this.mes = mes;
 		this.stage = stage;
+		this.previousPane = previousPane;
 		initializeData();
 		borderPane = new BorderPane();
 		stage.setTitle("Ritmo Latino Gestión - Vista de alumnos de " + mes.toString());
@@ -90,16 +92,16 @@ public class VistaMes {
 				for(Alumno a : listaAlumnos) {
 					if(!nombre.getText().isEmpty()) {
 						if(!apellidos.getText().isEmpty()) {
-							if(	a.getNombre().contains(nombre.getText()) &&
-								a.getApellidos().contains(apellidos.getText())){
+							if(	a.getNombre().toLowerCase().contains(nombre.getText().toLowerCase()) &&
+								a.getApellidos().toLowerCase().contains(apellidos.getText().toLowerCase())){
 							    tableView.getItems().add(a);
 							}
-						} else if(a.getNombre().contains(nombre.getText())) {
+						} else if(a.getNombre().toLowerCase().contains(nombre.getText().toLowerCase())) {
 						    tableView.getItems().add(a);
 						}
 						
 					} else if(!apellidos.getText().isEmpty()) {
-						if(a.getApellidos().contains(apellidos.getText())) {
+						if(a.getApellidos().toLowerCase().contains(apellidos.getText().toLowerCase())) {
 							if(!tableView.getItems().contains(a)) {
 							    tableView.getItems().add(a);
 							}
@@ -245,6 +247,16 @@ public class VistaMes {
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setPrefHeight(App.ALTO*2);
 		
+	    tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        @Override 
+	        public void handle(MouseEvent event) {
+	            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
+					new VistaAlumno(previousPane, stage, seleccionado, Origen.VISTA, mes);                
+	            }
+	        }
+	    });
+		
 		return tableView;
 	}
 	
@@ -255,7 +267,7 @@ public class VistaMes {
     			new Button("Eliminar del mes"),
     			new Button("Generar recibo"),
     			new Button("Dar de baja"),
-    			new Button("Condonación masica")
+    			new Button("Condonación masiva")
     	};
     	
     	for(Button b : botones) {
@@ -291,11 +303,17 @@ public class VistaMes {
 			public void handle(ActionEvent arg0) {
 				if(tableView.getSelectionModel().getSelectedItems().size() > 0) {
 					Alumno seleccionado = tableView.getSelectionModel().getSelectedItems().get(0);
-					listaAlumnos.remove(seleccionado);
-					tableView.getItems().remove(seleccionado);
-					MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
-					ma.eliminar();
-					barra.setEstado("Se ha eliminado el mes " + mes.toString() + " del alumno " + seleccionado.toString());
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Eliminar alumno del meso");
+					alert.setHeaderText("¿Estás seguro de que quieres a eliminar a este alumno del mes?");
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == ButtonType.OK){
+						listaAlumnos.remove(seleccionado);
+						tableView.getItems().remove(seleccionado);
+						MesAlumno ma = MesAlumno.listaMesAlumno(seleccionado, mes).get(0);
+						ma.eliminar();
+						barra.setEstado("Se ha eliminado el mes " + mes.toString() + " del alumno " + seleccionado.toString());
+					}
 				} else {
 					barra.setEstado("No se ha seleccionado ningún alumno para borrar del mes");
 				}
